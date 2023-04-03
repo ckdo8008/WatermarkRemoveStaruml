@@ -18,7 +18,7 @@ regedit
 컴퓨터\HKEY_CLASSES_ROOT\*\shell\removeWatermark\command
 ```
 
-## 기본값 수정
+## command 기본값 수정
 
 ```
 "{path}\WatermarkRemoveStaruml.exe" "%1"
