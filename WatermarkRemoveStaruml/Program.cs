@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Svg;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using WatermarkRemoveStaruml;
 
 namespace svgWatermarkRemoveStaruml
 {
@@ -13,6 +15,29 @@ namespace svgWatermarkRemoveStaruml
             AccessError = -2,
             EtcError = -3,
             DoNotProcess = 1,
+        }
+
+        static void Save(FileInfo inputPath, string outputPath, float? width)
+        {
+            var svgDocument = SvgDocument.Open(inputPath.FullName);
+
+            if (svgDocument == null)
+            {
+                Console.WriteLine($"Error: Failed to load input file: {inputPath.FullName}");
+                Console.ReadKey();
+                return;
+            }
+
+            //if (width.HasValue)
+            //{
+            //    svgDocument.Width = width.Value;
+            //    svgDocument.Height = width.Value;
+            //}
+
+            using (var bitmap = svgDocument.Draw((int)width.Value, 0))
+            {
+                bitmap?.Save(outputPath);
+            }
         }
 
         static int WaterMarkRemove(string aFileName)
@@ -48,6 +73,12 @@ namespace svgWatermarkRemoveStaruml
                         stream.Flush();
                     }
                 }
+
+                var file = new FileInfo(aFileName);
+                var outputPath = string.Empty;
+                outputPath = Path.ChangeExtension(file.FullName, ".png");
+                Save(file, outputPath, 2853);
+
             }
             catch (Exception ex)
             {
